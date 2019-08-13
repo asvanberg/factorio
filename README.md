@@ -32,14 +32,12 @@ as well as js_of_ocaml.
 
 ### Debian or Ubuntu:
 
-    sudo apt-get install ocaml ocaml-findlib camlp4 js-of-ocaml
-
-Alternatively, you can use OPAM (OCaml Package Manager, https://opam.ocaml.org):
+Use OPAM (OCaml Package Manager, https://opam.ocaml.org):
 
     sudo apt-get install opam
     opam init
     opam switch 4.03.0
-    opam install js_of_ocaml js_of_ocaml-camlp4
+    opam install js_of_ocaml js_of_ocaml-ppx
 
 ### Windows:
 
@@ -48,7 +46,7 @@ Open the OCaml terminal that the installation produces and run the following:
 
     opam init
     opam switch 4.03.0
-    opam install js_of_ocaml js_of_ocaml-camlp4
+    opam install js_of_ocaml js_of_ocaml-ppx
 
 ## Compile Factorio Planner
 

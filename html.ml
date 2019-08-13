@@ -24,65 +24,65 @@
 type t = Dom.node Js.t
 
 let alert x =
-  Dom_html.window##alert(Js.string x)
+  Dom_html.window##(alert (Js.string x))
 
 let text value =
-  let text = Dom_html.document##createTextNode(Js.string value) in
+  let text = Dom_html.document##(createTextNode (Js.string value)) in
   (text :> t)
 
 let text' value =
-  let text = Dom_html.document##createTextNode(Js.string value) in
-  let set_text value = text##replaceData(0, text##length, Js.string value) in
+  let text = Dom_html.document##(createTextNode (Js.string value)) in
+  let set_text value = text##(replaceData (0) text##.length (Js.string value)) in
   (text :> t), set_text
 
 let img ?(class_ = "") ?alt ?title src =
   let alt = match alt with None -> src | Some alt -> alt in
   let img = Dom_html.(createImg document) in
-  img##src <- Js.string src;
-  img##alt <- Js.string alt;
-  img##className <- Js.string class_;
-  (match title with None -> () | Some title -> img##title <- Js.string title);
+  img##.src := Js.string src;
+  img##.alt := Js.string alt;
+  img##.className := Js.string class_;
+  (match title with None -> () | Some title -> img##.title := Js.string title);
   (img :> t)
 
 let a ?(class_ = "") ?(href = "") ?(on_click = fun () -> ()) items =
   let a = Dom_html.(createA document) in
   let append_node node =
-    let _: Dom.node Js.t = a##appendChild(node) in
+    let _: Dom.node Js.t = a##(appendChild node) in
     ()
   in
   List.iter append_node items;
-  a##className <- Js.string class_;
-  a##href <- Js.string href;
+  a##.className := Js.string class_;
+  a##.href := Js.string href;
   let on_click _ = on_click (); Js._true in
-  a##onclick <- Dom.handler on_click;
+  a##.onclick := Dom.handler on_click;
   (a :> t)
 
 let button ?(class_ = "") ?(on_click = fun () -> ()) items =
   let button = Dom_html.(createButton document) in
   let append_node node =
-    let _: Dom.node Js.t = button##appendChild(node) in
+    let _: Dom.node Js.t = button##(appendChild node) in
     ()
   in
   List.iter append_node items;
-  button##className <- Js.string class_;
+  button##.className := Js.string class_;
   let on_click _ = on_click (); Js._true in
-  button##onclick <- Dom.handler on_click;
+  button##.onclick := Dom.handler on_click;
   (button :> t)
 
 let append_node parent node =
-  let _: Dom.node Js.t = parent##appendChild(node) in
+  let _: Dom.node Js.t = parent##(appendChild node) in
   ()
 
 let set_items parent (items: t list) =
   List.iter
-    (fun child -> let _: Dom.node Js.t = parent##removeChild(child) in ())
-    (Dom.list_of_nodeList parent##childNodes);
+    (fun child -> let _: Dom.node Js.t = parent##(removeChild child) in ())
+    (Dom.list_of_nodeList parent##.childNodes);
   List.iter (append_node parent) items
 
 let p' ?(class_ = "") items =
   let p = Dom_html.(createP document) in
   List.iter (append_node p) items;
-  p##className <- Js.string class_;
+  p##.className := Js.string class_;
   (p :> t), set_items p
 
 let p ?class_ items =
@@ -95,7 +95,7 @@ let p_text ?class_ string =
 let div' ?(class_ = "") items =
   let div = Dom_html.(createDiv document) in
   List.iter (append_node div) items;
-  div##className <- Js.string class_;
+  div##.className := Js.string class_;
   (div :> t), set_items div
 
 let div ?class_ items =
@@ -105,7 +105,7 @@ let div ?class_ items =
 let span' ?(class_ = "") items =
   let span = Dom_html.(createSpan document) in
   List.iter (append_node span) items;
-  span##className <- Js.string class_;
+  span##.className := Js.string class_;
   (span :> t), set_items span
 
 let span ?class_ items =
@@ -114,11 +114,11 @@ let span ?class_ items =
 
 let checkbox_input' ?(class_ = "") ?(on_change = fun _ -> ()) checked =
   let input = Dom_html.(createInput ~_type: (Js.string "checkbox") document) in
-  input##checked <- Js.bool checked;
-  let on_click _ = on_change (Js.to_bool input##checked); Js._true in
-  input##onclick <- Dom.handler on_click;
-  input##className <- Js.string class_;
-  let set_checked checked = input##checked <- Js.bool checked in
+  input##.checked := Js.bool checked;
+  let on_click _ = on_change (Js.to_bool input##.checked); Js._true in
+  input##.onclick := Dom.handler on_click;
+  input##.className := Js.string class_;
+  let set_checked checked = input##.checked := Js.bool checked in
   (input :> t), set_checked
 
 let checkbox_input ?class_ ?on_change checked =
@@ -133,11 +133,11 @@ let radio_input' ?(class_ = "") ?(on_change = fun _ -> ()) ?(name = "")
         document
     )
   in
-  input##checked <- Js.bool checked;
-  let on_click _ = on_change (Js.to_bool input##checked); Js._true in
-  input##onclick <- Dom.handler on_click;
-  input##className <- Js.string class_;
-  let set_checked checked = input##checked <- Js.bool checked in
+  input##.checked := Js.bool checked;
+  let on_click _ = on_change (Js.to_bool input##.checked); Js._true in
+  input##.onclick := Dom.handler on_click;
+  input##.className := Js.string class_;
+  let set_checked checked = input##.checked := Js.bool checked in
   (input :> t), set_checked
 
 let radio_input ?class_ ?on_change ?name checked =
@@ -146,11 +146,11 @@ let radio_input ?class_ ?on_change ?name checked =
 
 let text_input' ?(class_ = "") ?(on_change = fun _ -> ()) value =
   let input = Dom_html.(createInput ~_type: (Js.string "text") document) in
-  input##value <- Js.string value;
-  let on_input _ = on_change (Js.to_string input##value); Js._true in
-  input##oninput <- Dom.handler on_input;
-  input##className <- Js.string class_;
-  let set_value value = input##value <- Js.string value in
+  input##.value := Js.string value;
+  let on_input _ = on_change (Js.to_string input##.value); Js._true in
+  input##.oninput := Dom.handler on_input;
+  input##.className := Js.string class_;
+  let set_value value = input##.value := Js.string value in
   (input :> t), set_value
 
 let text_input ?class_ ?on_change value =
@@ -163,23 +163,23 @@ let run html =
     let body =
       let find_tag name =
         let elements =
-          Dom_html.window##document##getElementsByTagName(Js.string name)
+          Dom_html.window##.document##(getElementsByTagName (Js.string name))
         in
         let element =
-          Js.Opt.get elements##item(0)
+          Js.Opt.get elements##(item (0))
             (fun () -> failwith ("find_tag("^name^")"))
         in
         element
       in
       find_tag "body"
     in
-    let _: t = body##appendChild(html) in
+    let _: t = body##(appendChild html) in
     Js._false
   in
-  Dom_html.window##onload <- Dom.handler on_load
+  Dom_html.window##.onload := Dom.handler on_load
 
 let get_hash () =
-  let fragment = Dom_html.window##location##hash |> Js.to_string in
+  let fragment = Dom_html.window##.location##.hash |> Js.to_string in
   if fragment = "" then
     ""
   else if fragment.[0] = '#' then
@@ -188,8 +188,8 @@ let get_hash () =
     fragment
 
 let set_hash hash =
-  Dom_html.window##location##hash <- Js.string hash
+  Dom_html.window##.location##.hash := Js.string hash
 
 let on_hash_change handler =
   let handler _ = handler (); Js._true in
-  Dom_html.window##onhashchange <- Dom.handler handler
+  Dom_html.window##.onhashchange := Dom.handler handler
