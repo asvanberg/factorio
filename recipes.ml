@@ -300,7 +300,7 @@ let solid_rocket_fuel =
   res "Rocket Fuel" fuel_refinery 1. ~allow_productivity: true
     [ 10., solid_fuel; 10., light_oil ]
 let liquid_rocket_fuel =
-  res "Liquid rocket fuel" fuel_refinery 1. ~allow_productivity: true
+  res "Liquid rocket fuel" fuel_refinery 1. ~count: 50. ~allow_productivity: true
     [ 1., solid_rocket_fuel ]
 
 (* Weapons *)
