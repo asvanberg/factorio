@@ -574,7 +574,7 @@ let steam_engine =
     [ 8., iron_gear_wheel; 5., pipe; 10., iron_plate ]
 let solar_panel =
   res "Solar Panel" am1 10.
-    [ 5., steel_plate; 15., electronic_circuit; 5., copper_plate ]
+    [ 5., steel_plate; 15., electronic_circuit; 5., copper_plate; 5., glass ]
 let accumulator =
   res "Accumulator" am1 10.
     [ 2., iron_plate; 5., battery ]
