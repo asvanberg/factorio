@@ -47,7 +47,8 @@ let electric_furnace = maker "Electric Furnace" 2.
 let chemical_plant_ = maker "Chemical Plant" 1.
 let centrifuge = maker "Centrifuge" 1.
 let pumpjack = maker "Pumpjack" 1.
-let rocket_silo = maker "Rocket Silo" 0.001
+let rocket_silo = maker "Rocket silo" 1.
+let fuel_refinery_ = maker "Fuel refinery" 1.
 
 (* Shorthands for some commonly-used lists of makers. *)
 
@@ -57,6 +58,7 @@ let am2 = [ assembling_machine_2; assembling_machine_3 ]
 let am3 = [ assembling_machine_3 ]
 let furnace = [ stone_furnace; steel_furnace; electric_furnace ]
 let chemical_plant = [ chemical_plant_ ]
+let fuel_refinery = [ fuel_refinery_ ]
 
 (******************************************************************************)
 (*                                  Resources                                 *)
@@ -171,11 +173,11 @@ let stone_brick =
 
 let petroleum_gas_basic =
   res "Petroleum Gas" [ maker "Basic Oil Processing" 1. ] 5.
-    ~count: 40. ~style: Global ~allow_productivity: true
-    [ 100., crude_oil ]
+    ~count: 90. ~style: Global ~allow_productivity: true
+    [ 100., crude_oil; 50., water ]
 let petroleum_gas_advanced =
   res "Petroleum Gas" [ maker "Advanced Oil Processing" 1. ] 5.
-    ~count: 55. ~style: Global ~allow_productivity: true
+    ~count: 50. ~style: Global ~allow_productivity: true
     [ 100., crude_oil; 50., water ]
 let petroleum_gas_cracking =
   (* 1 Heavy Oil becomes 3/4 = 0.75 Light Oil.
@@ -209,9 +211,12 @@ let iron_gear_wheel =
 let copper_cable =
   res "Copper Cable" am1 0.5 ~count: 2. ~allow_productivity: true
     [ 1., copper_plate ]
+let stone_tablet =
+  res "Stone tablet" am1 0.5 ~count: 4. ~allow_productivity: true
+    [ 1., stone_brick ]
 let electronic_circuit =
   res "Electronic Circuit" am1 0.5 ~allow_productivity: true
-    [ 1., iron_plate; 3., copper_cable ]
+    [ 1., stone_tablet; 3., copper_cable ]
 let advanced_circuit =
   res "Advanced Circuit" am1 6. ~allow_productivity: true
     [ 2., electronic_circuit; 2., plastic_bar; 4., copper_cable ]
@@ -221,9 +226,15 @@ let processing_unit =
 let pipe =
   res "Pipe" am1 0.5
     [ 1., iron_plate ]
+let motor =
+  res "Motor" am1 0.6 ~allow_productivity: true
+    [ 1., iron_plate; 1., iron_gear_wheel ]
+let electric_motor =
+  res "Electric motor" am1 0.8 ~allow_productivity: true
+      [ 6., copper_cable; 1., motor ]
 let engine_unit =
   res "Engine Unit" am1 10. ~allow_productivity: true
-    [ 1., steel_plate; 1., iron_gear_wheel; 2., pipe ]
+    [ 2., steel_plate; 2., iron_gear_wheel; 2., pipe; 1., motor ]
 let heavy_oil =
   res "Heavy Oil" [ maker "Basic Oil Processing" 1. ] 5.
     ~count: 3. ~allow_productivity: true
@@ -237,11 +248,11 @@ let lubricant =
     [ 10., heavy_oil ]
 let electric_engine_unit =
   res "Electric Engine Unit" am2 10. ~allow_productivity: true
-    [ 1., engine_unit; 2., electronic_circuit; 15., lubricant ]
+    [ 1., engine_unit; 1., electronic_circuit; 1., electric_motor; 40., lubricant ]
 let flying_robot_frame =
   res "Flying Robot Frame" am1 20. ~allow_productivity: true
-    [ 1., electric_engine_unit; 2., battery; 1., steel_plate;
-      3., electronic_circuit ]
+    [ 4., electric_engine_unit; 4., battery; 41., steel_plate;
+      4., electronic_circuit ]
 let transport_belt =
   res "Transport Belt" am1 0.5 ~count: 2.
     [ 1., iron_plate; 1., iron_gear_wheel ]
@@ -260,6 +271,37 @@ let empty_barrel =
 let explosives =
   res "Explosives" chemical_plant 5. ~count: 2. ~allow_productivity: true
     [ 1., sulfur; 1., coal; 10., water ]
+let sand =
+  res "Sand" am1 0.5 ~count: 2. ~allow_productivity: true
+    [ 1., stone ]
+let glass =
+  res "Glass" furnace 4. ~allow_productivity: true
+    [ 4., sand ]
+let heat_shielding =
+  res "Heat shielding" am1 10. ~allow_productivity: true
+    [ 20., stone_tablet; 2., steel_plate; 8., sulfur ]
+let low_density_structure =
+  res "Low Density Structure" am1 20. ~allow_productivity: true
+    [ 5., steel_plate; 10., copper_plate; 10., plastic_bar; 10., glass ]
+let rocket_control_unit =
+  res "Rocket Control Unit" am1 30. ~allow_productivity: true
+    [ 1., processing_unit; 5., advanced_circuit; 5., glass; 5., iron_plate; 5., battery ]
+let solid_fuel_from_heavy_oil =
+  res "Solid Fuel" chemical_plant 3. ~allow_productivity: true
+    [ 20., heavy_oil ]
+let solid_fuel_from_light_oil =
+  res "Solid Fuel" chemical_plant 3. ~allow_productivity: true
+    [ 10., light_oil ]
+let solid_fuel_from_petroleum_gas =
+  res "Solid Fuel" fuel_refinery 3. ~allow_productivity: true
+    [ 20., petroleum_gas ]
+let solid_fuel = solid_fuel_from_light_oil
+let solid_rocket_fuel =
+  res "Rocket Fuel" fuel_refinery 1. ~allow_productivity: true
+    [ 10., solid_fuel; 10., light_oil ]
+let liquid_rocket_fuel =
+  res "Liquid rocket fuel" fuel_refinery 1. ~allow_productivity: true
+    [ 1., solid_rocket_fuel ]
 
 (* Weapons *)
 
@@ -575,32 +617,13 @@ let pump =
 
 (* Rocket Compenents *)
 
-let low_density_structure =
-  res "Low Density Structure" am1 20. ~allow_productivity: true
-    [ 2., steel_plate; 20., copper_plate; 5., plastic_bar ]
-let rocket_control_unit =
-  res "Rocket Control Unit" am1 30. ~allow_productivity: true
-    [ 1., processing_unit; 1., speed_module ]
-let solid_fuel_from_heavy_oil =
-  res "Solid Fuel" chemical_plant 3. ~allow_productivity: true
-    [ 20., heavy_oil ]
-let solid_fuel_from_light_oil =
-  res "Solid Fuel" chemical_plant 3. ~allow_productivity: true
-    [ 10., light_oil ]
-let solid_fuel_from_petroleum_gas =
-  res "Solid Fuel" chemical_plant 3. ~allow_productivity: true
-    [ 20., petroleum_gas ]
-let solid_fuel = solid_fuel_from_petroleum_gas
-let rocket_fuel =
-  res "Rocket Fuel" am1 30. ~allow_productivity: true
-    [ 10., solid_fuel; 10., light_oil ]
 let rocket_part =
   res "Rocket Part" [ maker "Rocket Silo" 1. ] 3. ~allow_productivity: true
-    [ 10., low_density_structure; 10., rocket_fuel; 10., rocket_control_unit ]
+    [ 5., low_density_structure; 10., solid_rocket_fuel; 5., rocket_control_unit; 5., heat_shielding ]
 let satellite =
   res "Satellite" am1 5.
-    [ 100., low_density_structure; 100., solar_panel; 100., accumulator;
-      5., radar; 100., processing_unit; 50., rocket_fuel ]
+    [ 100., low_density_structure; 50., solar_panel; 50., accumulator;
+      5., radar; 100., processing_unit; 50., solid_rocket_fuel; 100., glass ]
 
 (* new in 0.15 *)
 
@@ -644,13 +667,13 @@ let production_science_pack =
     [ 1., r_electric_furnace; 1., productivity_module; 30., straight_rail; ]
 
 let utility_science_pack =
-  res "Utility Science Pack" am1 21. ~count: 3. ~allow_productivity: true
-    [ 1., flying_robot_frame; 3., low_density_structure; 2., processing_unit; ]
+  res "Utility Science Pack" am1 35. ~count: 5. ~allow_productivity: true
+    [ 1., flying_robot_frame; 3., low_density_structure; 3., processing_unit; ]
 
-let space_science_pack =
+let rocket_science_pack =
   (* TODO: we could replace the 1. by the time it takes to launch a rocket. *)
-  res "Space Science Pack" [ rocket_silo ] 1. ~count: 1000.
-    [ 100., rocket_part; 1., satellite ]
+  res "Rocket science pack" am1 1. ~count: 3.
+    [ 5., battery; 1., processing_unit; 1., heat_shielding; 1., low_density_structure; 100., liquid_rocket_fuel ]
 
 (* Armor *)
 
@@ -740,6 +763,8 @@ let resources =
       copper_plate;
       steel_plate;
       stone_brick;
+      stone_tablet;
+      glass;
       sulfur;
       plastic_bar;
       battery;
@@ -749,6 +774,8 @@ let resources =
       electronic_circuit;
       advanced_circuit;
       processing_unit;
+      motor;
+      electric_motor;
       engine_unit;
       electric_engine_unit;
       flying_robot_frame;
@@ -771,7 +798,7 @@ let resources =
       military_science_pack;
       production_science_pack;
       utility_science_pack;
-      space_science_pack;
+      rocket_science_pack;
     ];
 
     "Player Equipment",
@@ -949,7 +976,7 @@ let resources =
     "Rocket Components",
     [
       low_density_structure;
-      rocket_fuel;
+      solid_rocket_fuel;
       rocket_part;
       rocket_control_unit;
       satellite;
