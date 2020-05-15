@@ -774,6 +774,7 @@ let resources =
       electronic_circuit;
       advanced_circuit;
       processing_unit;
+      heat_shielding;
       motor;
       electric_motor;
       engine_unit;
