@@ -256,9 +256,12 @@ let flying_robot_frame =
 let transport_belt =
   res "Transport Belt" am1 0.5 ~count: 2.
     [ 1., iron_plate; 1., iron_gear_wheel ]
+let burner_inserter =
+  res "Burner Inserter" am1 0.5
+    [ 2., iron_stick; 1., motor ]
 let inserter =
   res "Inserter" am1 0.5
-    [ 1., iron_plate; 1., iron_gear_wheel; 1., electronic_circuit ]
+    [ 1., burner_inserter; 1., electric_motor ]
 let fast_inserter =
   res "Fast Inserter" am1 0.5
     [ 1., inserter; 2., iron_plate; 2., electronic_circuit ]
@@ -443,9 +446,6 @@ let express_splitter =
 
 (* Inserters *)
 
-let burner_inserter =
-  res "Burner Inserter" am1 0.5
-    [ 1., iron_plate; 1., iron_gear_wheel ]
 let long_handed_inserter =
   res "Long Handed Inserter" am1 0.5
     [ 1., inserter; 1., iron_plate; 1., iron_gear_wheel ]
