@@ -519,10 +519,10 @@ let r_electric_mining_drill =
     [ 10., iron_plate; 5., iron_gear_wheel; 3., electronic_circuit ]
 let r_steel_furnace =
   res "Steel Furnace" am1 3.
-    [ 6., steel_plate; 10., stone_brick ]
+    [ 6., steel_plate; 6., stone_brick; 1., r_stone_furnace ]
 let r_electric_furnace =
   res "Electric Furnace" am1 5.
-    [ 10., steel_plate; 10., stone_brick; 5., advanced_circuit ]
+    [ 5., steel_plate; 2., heat_shielding; 5., advanced_circuit; 1., r_steel_furnace ]
 let r_assembling_machine_1 =
   res assembling_machine_1.name am2 0.5
     [ 3., electronic_circuit; 5., iron_gear_wheel; 9., iron_plate ]
